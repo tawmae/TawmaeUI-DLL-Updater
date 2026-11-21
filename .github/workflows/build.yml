@@ -1,0 +1,63 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build TawmaeUI-DLL-Updater.csproj -c Release -o out
+
+      - name: Package
+        shell: pwsh
+        run: |
+          Compress-Archive -LiteralPath "out/TawmaeUI DLL Updater.exe" -DestinationPath out/TawmaeUI-DLL-Updater.zip
+          $lines = foreach ($name in "TawmaeUI DLL Updater.exe", "TawmaeUI-DLL-Updater.zip") {
+            "{0}  {1}" -f (Get-FileHash "out/$name" -Algorithm SHA256).Hash.ToLowerInvariant(), $name
+          }
+          $lines | Set-Content -Encoding ascii out/SHA256.txt
+          $lines | ForEach-Object { "    $_" } >> $env:GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: TawmaeUI-DLL-Updater
+          path: |
+            out/TawmaeUI-DLL-Updater.zip
+            out/SHA256.txt
+
+      - name: Attest
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: |
+            out/TawmaeUI DLL Updater.exe
+            out/TawmaeUI-DLL-Updater.zip
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notes = @("Built by GitHub Actions from commit $env:GITHUB_SHA.", "", "Put ``TawmaeUI DLL Updater.exe`` from the zip into your Streamer.bot folder and run it.", "", "SHA-256:", "", '```') + (Get-Content out/SHA256.txt) + '```'
+          $notes | Set-Content out/notes.md
+          gh release create $env:GITHUB_REF_NAME out/TawmaeUI-DLL-Updater.zip out/SHA256.txt --title $env:GITHUB_REF_NAME --notes-file out/notes.md

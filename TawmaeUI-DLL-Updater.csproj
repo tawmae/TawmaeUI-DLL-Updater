@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>12.0</LangVersion>
+    <AssemblyName>TawmaeUI DLL Updater</AssemblyName>
+    <RootNamespace>TawmaeUIUpdater</RootNamespace>
+    <StartupObject>TawmaeUIUpdater.Program</StartupObject>
+    <ApplicationIcon>Assets\tawmae.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <Version>1.0.0</Version>
+    <Product>TawmaeUI DLL Updater</Product>
+    <AssemblyTitle>TawmaeUI DLL Updater</AssemblyTitle>
+    <Description>Puts the latest TawmaeUI.dll from tawmae.xyz into a Streamer.bot folder.</Description>
+    <Company>tawmae</Company>
+    <Copyright>Copyright (c) 2026 tawmae</Copyright>
+
+    <Deterministic>true</Deterministic>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\*.ttf" />
+    <Resource Include="Assets\logo.png" />
+    <Resource Include="Assets\icon.png" />
+    <Resource Include="Assets\tawmae.ico" />
+  </ItemGroup>
+
+</Project>
