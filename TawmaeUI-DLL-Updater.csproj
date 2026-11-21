@@ -11,7 +11,7 @@
     <ApplicationIcon>Assets\tawmae.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Product>TawmaeUI DLL Updater</Product>
     <AssemblyTitle>TawmaeUI DLL Updater</AssemblyTitle>
     <Description>Puts the latest TawmaeUI.dll from tawmae.xyz into a Streamer.bot folder.</Description>

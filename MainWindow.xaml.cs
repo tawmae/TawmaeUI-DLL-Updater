@@ -380,7 +380,7 @@ namespace TawmaeUIUpdater
 
             SetChip("Up to date", Tone.Accent);
             SetVersion(installed);
-            SetFacts(order == 0 ? "Same version as tawmae.xyz" : "Newer than tawmae.xyz (**" + latest + "**)");
+            SetFacts(order == 0 ? "You're on the latest version, yippie!" : "Newer than tawmae.xyz (**" + latest + "**)");
             SetPrimary(Act.Close, "Close", null, false);
             return false;
         }
